@@ -24,6 +24,7 @@ public class RoundedCube : MonoBehaviour
         myMesh = new Mesh();
         GetComponent<MeshFilter>().mesh = myMesh;
         myMesh.name = "Procedural Cube";
+        myMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
 
         CreateVertices();
         CreateTriangles();
