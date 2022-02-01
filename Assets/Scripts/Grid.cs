@@ -25,15 +25,29 @@ public class Grid : MonoBehaviour
 
         vertices = new Vector3[(xSize + 1) * (ySize + 1)];
 
+        Vector2[] uv = new Vector2[vertices.Length];
+
+        Vector4[] tangents = new Vector4[vertices.Length];
+        Vector4 tangent = new Vector4(1f, 0f, 0f, -1f);
+
         for (int verticeIndex = 0, y = 0; y <= ySize; y++)
         {
             for (int x = 0; x <= xSize; x++, verticeIndex++)
             {
                 vertices[verticeIndex] = new Vector3(x, y);
+
+                uv[verticeIndex] = new Vector2((float)x / xSize, (float)y / ySize);
+
+                tangents[verticeIndex] = tangent;
+
                 yield return waitTime;
             }
         }
         myMesh.vertices = vertices;
+
+        myMesh.uv = uv;
+
+        myMesh.tangents = tangents;
 
         int[] triangles = new int[xSize * ySize * 6];
         for (int tempTriangles = 0, tempVertices = 0, y = 0; y < ySize; y++, tempVertices++)
@@ -48,6 +62,8 @@ public class Grid : MonoBehaviour
                 yield return waitTime;
             }
         }
+
+        myMesh.RecalculateNormals();
     }
 
     private void OnDrawGizmos()
@@ -56,7 +72,7 @@ public class Grid : MonoBehaviour
             return;
 
         Gizmos.color = Color.black;
-        foreach(Vector3 vertice in vertices)
+        foreach (Vector3 vertice in vertices)
         {
             Gizmos.DrawSphere(vertice, .1f);
         }
